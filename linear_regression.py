@@ -1,6 +1,7 @@
 #NOTE: contains all items from unit, so tons of notes.
-#made several print and plot items inactiveimport pandas as pd
+#made several print and plot items inactive
 
+import pandas as pd
 import matplotlib.pyplot as plt 
 import numpy as np 
 import statsmodels.api as sm 
@@ -75,6 +76,8 @@ X = sm.add_constant(x)
 model = sm.OLS(y,X)
 f = model.fit()
 print f.summary()
+
+loansData.to_csv('loansData_clean.csv', header=True, index=False)
 
 
 
