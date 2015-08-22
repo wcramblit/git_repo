@@ -1,3 +1,10 @@
+'''
+Uses dfs in Pandas to perform this clean and analysis. 
+Commits to SQL as best practice but doesn't use much sQL
+Is there an easier way to merge on column and row values in SQL?
+
+'''
+
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd 
