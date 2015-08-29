@@ -52,26 +52,27 @@ def email_prob(path_to_text_file, ham_probs, spam_probs):
             if word.lower() not in doc_list: #check if word is already in file
                 doc_list.append(word.lower()) #add word to file's list of words
     #now doc_list is a list of words in the document
-    spam_bayes = [] #establish our list for our bayes probs
     #establish our key values for bayes calculation
     prob_ham = float(len(ham_probs)/float((len(ham_probs) + len(spam_probs))))
     prob_spam = 1-prob_ham
+    spam_bayes = []
     for word in doc_list: #iterate through terms in our email
+        prob_word_in_spam = 0
         for k,v in spam_probs.iteritems(): #iterate through our spam probs
-            if k == word:
-                prob_word_in_spam = spam_probs[k] #assign values
+            if k == word and word != 'subject':
+                prob_word_in_spam += float(spam_probs[k]) #assign values
         for k,v in ham_probs.iteritems(): #iterate through our ham probs
-            if k == word:
-                prob_word_in_ham = ham_probs[k] #assign values
-        prob_word = (prob_word_in_spam * prob_spam) + (prob_word_in_ham * prob_ham)
-        prob_spam_given_word = (prob_word_in_spam * prob_spam) / (prob_word)
-        spam_bayes.append(prob_spam_given_word) #create list of bayes probs
+            if k == word and word != 'subject':
+                prob_word_in_ham = float(ham_probs[k]) #assign values
+        if prob_word_in_spam > 0.0:
+            prob_word = float((prob_word_in_spam * prob_spam) + (prob_word_in_ham * prob_ham))
+            prob_spam_given_word = float((prob_word_in_spam * prob_spam) / (prob_word))
+            spam_bayes.append(float((prob_spam_given_word * math.log(prob_word/(1-prob_word))) + math.log(1-prob_word)))
     
-    #determine and return the probability that the given email is spam
-    prob_email_is_spam = 1    
+    log_prob_email_is_spam = 0
     for val in spam_bayes:
-        prob_email_is_spam *= val ### IS THIS THE CORRECT OPERATION?
-    return prob_email_is_spam
+        log_prob_email_is_spam += val
+    return math.exp(log_prob_email_is_spam)
 
 '''
 function calls to test each and complete our analysis
