@@ -56,18 +56,13 @@ test_length = np.random.uniform(min(df['sepal_length']), max(df['sepal_length'])
 import math
 from scipy import stats
 
-distance_s_length = []
-for i in df['sepal_length']:
-    distance_s_length.append(i - test_length)
-    
-distance_s_width = []
-for i in df['sepal_width']:
-    distance_s_width.append(i - test_width)
+distance_s_length = [i - test_length for i in df['sepal_length']]
+distance_s_width = [i - test_width for i in df['sepal_width']]
 
 # calculate euclidean distance for each item
 df_dist = pd.DataFrame(data=distance_s_length)
 df_dist[1] = distance_s_width
-df_dist[2] = map(lambda x,y: math.sqrt((x-y)**2),df_dist[0],df_dist[1])
+df_dist[2] = map(lambda x,y: math.sqrt((x**2+y**2)),df_dist[0],df_dist[1]) 
 df_dist['target'] = df['target']
 
 # sort df_dist by euclidean distance
